@@ -4154,6 +4154,17 @@ const TYPICAL_TEMPLATES = {
   // ===== 进阶档补充：原先这 4 个知识点没有进阶题，选它就永远出基础题 =====
   rational: [
     function() {
+      // 科学记数法还原（与"混合运算"结构不同，单独算一种题型）
+      const a = randInt(2, 9), b = randInt(1, 9), n = randInt(3, 7);
+      const val = Math.round((a + b / 10) * Math.pow(10, n));
+      return {
+        question: `把科学记数法 ${a}.${b}×10${sup(n)} 写成原数。`,
+        answer: String(val),
+        solution: `${a}.${b}×10${sup(n)} = ${a}.${b} × ${Math.pow(10, n)}\n= ${val}\n【易错提醒】科学记数法 a×10ⁿ（n 为正整数）还原成原数时，把小数点向右移 n 位；要看清题目是"还原成原数"还是"改写成科学记数法"，方向搞反就错。`,
+        kp: 'rational', tier: 'medium'
+      };
+    },
+    function() {
       // 负整数指数幂 + 乘方 + 零次幂 + 绝对值混合（中考第 14 题常见复杂度）
       // (1/k)⁻¹ + (−1)^e − s² + k⁰ ，k/s/e 全部随机
       const k = randInt(2,9);
