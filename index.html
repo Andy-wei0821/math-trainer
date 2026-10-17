@@ -9105,9 +9105,9 @@ const CHAPTER_DIAGRAMS = {
     <text x="55" y="130" text-anchor="middle" font-size="13" font-weight="bold" fill="#3498db">邻边 b</text>
     <text x="180" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#e74c3c">对边 a</text>
     <text x="200" y="120" font-size="13" font-weight="bold" fill="#2ecc71">斜边 c</text>
-    <!-- 角A标注 -->
-    <path d="M80,180 A20,20 0 0,1 95,165" fill="none" stroke="#e74c3c" stroke-width="2"/>
-    <text x="100" y="175" font-size="12" fill="#e74c3c">∠A</text>
+    <!-- 角A标注（必须画在顶点 A(80,60) 处，位于 AC 向下与 AB 向右下之间） -->
+    <path d="M80,80 A20,20 0 0,0 96.4,71.5" fill="none" stroke="#e74c3c" stroke-width="2"/>
+    <text x="102" y="88" font-size="12" fill="#e74c3c">∠A</text>
     <!-- 三角函数公式 -->
     <text x="180" y="250" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">锐角三角函数（以∠A为例）</text>
     <text x="180" y="268" text-anchor="middle" font-size="12" fill="#e74c3c">sinA = 对边/斜边 = a/c</text>
