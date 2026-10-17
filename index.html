@@ -8074,7 +8074,9 @@ function buildSyncPayload() {
     overview: { sessions: state.history.length, errors: state.errors.length },
     training: state.history.map(function (h) {
       return {
-        date: h.date, topic: (typeof kpName === 'function' ? kpName(h.module) : h.module), total: h.total, correct: h.correct,
+        date: h.date, topic: (typeof kpName === 'function' ? kpName(h.module) : h.module),
+        group: (typeof kpGroup === 'function' ? kpGroup(h.module) : ''),
+        total: h.total, correct: h.correct,
         timeSec: h.time,
         adaptLevel: (h.adaptLevel === 0 || h.adaptLevel === 1 || h.adaptLevel === 2) ? h.adaptLevel : null
       };
