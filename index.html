@@ -5268,11 +5268,20 @@ function genNextTrainingQuestion() {
     kp = (t.adaptLevel >= 2) ? weightedPick(advKps, EXAM_FREQ) : weightedPick(Object.keys(GENERATORS), EXAM_FREQ);
   }
   let q = null;
-  for (var tt = 0; tt < 60; tt++) {
-    var cand = trainMakeQuestion(kp, t.adaptLevel);
-    var key = kp + '|' + trainSkeleton(cand);
-    if (!_trainUsedSkel[key]) { _trainUsedSkel[key] = 1; q = cand; break; }
-    if (!q) q = cand;
+  try {
+    for (var tt = 0; tt < 60; tt++) {
+      var cand = trainMakeQuestion(kp, t.adaptLevel);
+      var key = kp + '|' + trainSkeleton(cand);
+      if (!_trainUsedSkel[key]) { _trainUsedSkel[key] = 1; q = cand; break; }
+      if (!q) q = cand;
+    }
+  } catch (eGen) { q = null; }
+  // 保底：出题异常时直接用生成器出一道，保证训练不会卡住（尤其最后一题）
+  if (!q) {
+    try { q = GENERATORS[kp](); } catch (e2) { q = null; }
+  }
+  if (!q) {
+    try { q = GENERATORS[Object.keys(GENERATORS)[0]](); } catch (e3) { q = null; }
   }
   return q;
 }
@@ -5684,6 +5693,12 @@ function submitAnswer() {
     nb.onclick = nextQuestion;
     return;
   }
+  if (!q) {
+    // 题目加载异常：直接跳到交卷流程，避免卡在最后一题
+    alert('题目加载异常，将结束本次训练。');
+    finishTraining();
+    return;
+  }
   const userAns = document.getElementById('answer-input').value.trim();
   if (!userAns) return;
 
@@ -5782,11 +5797,12 @@ function submitAnswer() {
 
 function nextQuestion() {
   const t = state.training;
-  // Save error type if wrong
-  if (!t.results[t.current].correct) {
+  const _res0 = t.results[t.current];
+  // Save error type if wrong（加存在性判断，防止 results 缺项时崩溃导致交不了卷）
+  if (_res0 && !_res0.correct) {
     const eta = document.getElementById('error-type-area');
     const sel = eta.dataset.selected || '';
-    t.results[t.current].errorType = sel;
+    if (t.results[t.current]) t.results[t.current].errorType = sel;
     // 兜底：错题本对应条目若仍为空，按 lastErrorIndex 回写
     if (typeof state.lastErrorIndex === 'number' && state.errors[state.lastErrorIndex]) {
       const e = state.errors[state.lastErrorIndex];
